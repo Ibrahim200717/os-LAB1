@@ -1,0 +1,58 @@
+LAB QUESTION :29
+SEYED IBRAHIM HY
+
+#include <stdio.h>
+#include <pthread.h>
+#include <semaphore.h>
+
+#define CHAIRS 3
+int waiting = 0;
+
+sem_t barber_ready, customer_ready, mutex;
+
+void *barber(void *arg) {
+    for (int i = 0; i < 5; i++) {
+        sem_wait(&customer_ready);
+        sem_wait(&mutex);
+        waiting--;
+        sem_post(&mutex);
+
+        sem_post(&barber_ready);
+        printf("Barber is cutting hair.\n");
+    }
+    return NULL;
+}
+
+void *customer(void *arg) {
+    sem_wait(&mutex);
+    if (waiting < CHAIRS) {
+        waiting++;
+        sem_post(&mutex);
+        printf("Customer takes a seat. Waiting = %d\n", waiting);
+        sem_post(&customer_ready);
+        sem_wait(&barber_ready);
+        printf("Customer is getting haircut.\n");
+    } else {
+        sem_post(&mutex);
+        printf("No chairs available, customer leaves.\n");
+    }
+    return NULL;
+}
+
+int main() {
+    pthread_t b, c[5];
+
+    sem_init(&barber_ready, 0, 0);
+    sem_init(&customer_ready, 0, 0);
+    sem_init(&mutex, 0, 1);
+
+    pthread_create(&b, NULL, barber, NULL);
+    for (int i = 0; i < 5; i++)
+        pthread_create(&c[i], NULL, customer, NULL);
+
+    pthread_join(b, NULL);
+    for (int i = 0; i < 5; i++)
+        pthread_join(c[i], NULL);
+
+    return 0;
+}
