@@ -1,0 +1,29 @@
+QUESTION 34 LAB SEYED IBRAHIM 192571045
+#include <stdio.h>
+
+int main() {
+    int n, start, len;
+
+    printf("Enter number of files: ");
+    scanf("%d", &n);
+
+    int start_block[10], length[10];
+    for (int i = 0; i < n; i++) {
+        printf("Enter start block and length for file %d: ", i + 1);
+        scanf("%d %d", &start_block[i], &length[i]);
+    }
+
+    printf("\nFile\tStart Block\tLength\n");
+    for (int i = 0; i < n; i++)
+        printf("F%d\t%d\t\t%d\n", i + 1, start_block[i], length[i]);
+
+    int file, block_no;
+    printf("\nEnter file number and record number to access: ");
+    scanf("%d %d", &file, &block_no);
+
+    file--;
+    printf("Accessing block %d (reading blocks 0 to %d sequentially).\n",
+           start_block[file] + block_no, block_no);
+
+    return 0;
+}
