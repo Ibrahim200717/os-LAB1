@@ -1,0 +1,42 @@
+ROGRAM
+QUESTION NO : 25
+192571045 SEYED IBRAHIM
+
+
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <dirent.h>
+
+int main() {
+    char filename[20], dirname[20];
+
+    printf("Enter file name: ");
+    scanf("%s", filename);
+
+    int fd = open(filename, O_RDONLY);
+
+    int flags = fcntl(fd, F_GETFL);
+    printf("File flags: %d\n", flags);
+
+    off_t size = lseek(fd, 0, SEEK_END);
+    printf("File size (lseek): %ld bytes\n", (long) size);
+    close(fd);
+
+    struct stat st;
+    stat(filename, &st);
+    printf("File size (stat): %ld bytes\n", (long) st.st_size);
+
+    printf("Enter directory name: ");
+    scanf("%s", dirname);
+
+    DIR *dir = opendir(dirname);
+    struct dirent *entry;
+    printf("Directory contents:\n");
+    while ((entry = readdir(dir)) != NULL)
+        printf("%s\n", entry->d_name);
+    closedir(dir);
+
+    return 0;
+}
