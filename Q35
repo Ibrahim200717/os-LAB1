@@ -1,0 +1,30 @@
+#include <stdio.h>
+
+#define MAX 10
+
+int main() {
+    int n;
+    printf("Enter number of files: ");
+    scanf("%d", &n);
+
+    int index_block[10][MAX], num_blocks[10];
+
+    for (int i = 0; i < n; i++) {
+        printf("Enter number of blocks for file %d: ", i + 1);
+        scanf("%d", &num_blocks[i]);
+
+        printf("Enter block numbers: ");
+        for (int j = 0; j < num_blocks[i]; j++)
+            scanf("%d", &index_block[i][j]);
+    }
+
+    printf("\nFile\tIndex Blocks\n");
+    for (int i = 0; i < n; i++) {
+        printf("F%d\t", i + 1);
+        for (int j = 0; j < num_blocks[i]; j++)
+            printf("%d ", index_block[i][j]);
+        printf("\n");
+    }
+
+    return 0;
+}
