@@ -1,0 +1,37 @@
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+
+int main() {
+    char name[20], data[100];
+    int fd, choice;
+
+    do {
+        printf("\n1.Create 2.Write 3.Read 4.Delete 5.Exit\nEnter choice: ");
+        scanf("%d", &choice);
+        scanf("%s", name);
+
+        if (choice == 1) {
+            fd = creat(name, 0644);
+            close(fd);
+            printf("File created.\n");
+        } else if (choice == 2) {
+            fd = open(name, O_WRONLY | O_APPEND);
+            printf("Enter data: ");
+            scanf(" %[^\n]", data);
+            write(fd, data, sizeof(data));
+            close(fd);
+        } else if (choice == 3) {
+            fd = open(name, O_RDONLY);
+            int n = read(fd, data, sizeof(data));
+            data[n] = '\0';
+            printf("Content: %s\n", data);
+            close(fd);
+        } else if (choice == 4) {
+            unlink(name);
+            printf("File deleted.\n");
+        }
+    } while (choice != 5);
+
+    return 0;
+}
